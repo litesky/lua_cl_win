@@ -1,13 +1,15 @@
+/********************************************************************
+	author:		litesky@github.com
+*********************************************************************/
+
 #include <stdlib.h>
-#include <time.h> 
 #include <stdio.h> 
 #include <stdarg.h>
-#include <stdio.h>
 #include <assert.h>
-
 #include <wtypes.h>
 #include <wincon.h>
 #include <locale.h>
+
 #include "lua.h"
 #include "lauxlib.h"
 #include "mylib.h"
