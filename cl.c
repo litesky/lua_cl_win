@@ -26,11 +26,10 @@ static int lua_DLU(lua_State *L)
 	LEN = luaL_checknumber(L, 1);
 	//printf("O");
 	//printf("S");
-    if (GetConsoleScreenBufferInfo(hStdOut, &Info)==0)
-    {
-	    printf("ERROR");
-        return 1;
-    }
+    	if (GetConsoleScreenBufferInfo(hStdOut, &Info)==0)
+    	{
+          return 1;
+    	}
 
 	Rect.Left   = 0;
 	Rect.Top    = Info.dwCursorPosition.Y + LEN;
@@ -58,11 +57,10 @@ static int lua_DLA(lua_State *L)
 	LEN = luaL_checknumber(L, 1);
 	//printf("O");
 	//printf("S");
-    if (GetConsoleScreenBufferInfo(hStdOut, &Info)==0)
-    {
-	    printf("ERROR");
-        return 1;
-    }
+    	if (GetConsoleScreenBufferInfo(hStdOut, &Info)==0)
+    	{
+          return 1;
+    	}
 
 	Rect.Left   = 0;
 	Rect.Top    = Info.dwCursorPosition.Y + LEN;
