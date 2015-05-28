@@ -195,6 +195,11 @@ static int lua_ica( lua_State* L )
     return 0;
 }
 
+/*
+Clear the screen
+http://www.cplusplus.com/articles/4z18T05o/
+*/
+
 static int lua_icu( lua_State* L )
 {
     int LEN;
@@ -220,6 +225,82 @@ static int lua_icu( lua_State* L )
     return 0;
 }
 
+static int lua_csa( lua_State* L )
+{
+    HANDLE                     hStdOut;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD                      count;
+    DWORD                      cellCount;
+    COORD                      homeCoords = { 0, 0 };
+
+    hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
+    if ( hStdOut == INVALID_HANDLE_VALUE ) { return 1; }
+
+    /* Get the number of cells in the current buffer */
+    if ( !GetConsoleScreenBufferInfo( hStdOut, &csbi ) ) { return 1; }
+    cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+    /* Fill the entire buffer with spaces */
+    if ( !FillConsoleOutputCharacter(
+                hStdOut,
+                ( char ) ' ',
+                cellCount,
+                homeCoords,
+                &count
+            ) ) { return 1; }
+
+    /* Fill the entire buffer with the current colors and attributes */
+    if ( !FillConsoleOutputAttribute(
+                hStdOut,
+                csbi.wAttributes,
+                cellCount,
+                homeCoords,
+                &count
+            ) ) { return 1; }
+
+    /* Move the cursor home */
+    SetConsoleCursorPosition( hStdOut, homeCoords );
+    return 0;
+}
+
+static int lua_csu( lua_State* L )
+{
+    HANDLE                     hStdOut;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD                      count;
+    DWORD                      cellCount;
+    COORD                      homeCoords = { 0, 0 };
+
+    hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
+    if ( hStdOut == INVALID_HANDLE_VALUE ) { return 1; }
+
+    /* Get the number of cells in the current buffer */
+    if ( !GetConsoleScreenBufferInfo( hStdOut, &csbi ) ) { return 1; }
+    cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+    /* Fill the entire buffer with spaces */
+    if ( !FillConsoleOutputCharacter(
+                hStdOut,
+                ( TCHAR ) ' ',
+                cellCount,
+                homeCoords,
+                &count
+            ) ) { return 1; }
+
+    /* Fill the entire buffer with the current colors and attributes */
+    if ( !FillConsoleOutputAttribute(
+                hStdOut,
+                csbi.wAttributes,
+                cellCount,
+                homeCoords,
+                &count
+            ) ) { return 1; }
+
+    /* Move the cursor home */
+    SetConsoleCursorPosition( hStdOut, homeCoords );
+    return 0;
+}
+
 static int lua_hlp( lua_State* L )
 {
     puts(
@@ -232,6 +313,8 @@ static int lua_hlp( lua_State* L )
         "ilu( N )\tInsert N Lines\n"
         "ica( N )\tInsert N Chars\n"
         "icu( N )\tInsert N Chars\n"
+        "csa( N )\tClear  Screen\n"
+        "csu( N )\tClear  Screen\n"
     );
     return 0;
 }
@@ -246,6 +329,8 @@ static const struct luaL_Reg cl[] =
     {"dcu",         lua_dcu},
     {"ica",         lua_ica},
     {"icu",         lua_icu},
+    {"csa",         lua_csa},
+    {"csu",         lua_csu},
     {"hlp",         lua_hlp},
     {NULL,      NULL}
 };
